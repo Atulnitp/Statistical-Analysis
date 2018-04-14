@@ -48,6 +48,8 @@ class ChiSquareTest:
         self.datasample = x
         self.expectedvalue  = m
         self.dof = len(x) - 1
+        self.upper_bound = 0
+        self.lower_bound = 0
 
     def calculateChiSquareStat(self):
         chistat = map(lambda a, b: ((a-b)*(a-b))/b, self.datasample, self.expectedvalue)
@@ -63,7 +65,8 @@ class ChiSquareTest:
             if chi_sq_ditri_table[self.dof-1][i] > self.chistatval:
                 self.upper_bound = column[i]
                 self.lower_bound = column[i-1]
-                return (self.upper_bound + self.lower_bound)/2
+                break
+        return (self.upper_bound + self.lower_bound)/2
 
 
 
@@ -82,8 +85,9 @@ for _ in range(k):
 m = [round(float(sum(x)*p[i]), 4) for i in range(len(p))]
 
 obj = ChiSquareTest(x, m)
-obj.calculateChiSquareStat()
+chi_score = obj.calculateChiSquareStat()
 pVal = obj.calPvalue()
+print("Chi_score = ", chi_score)
 print("P-Value = " + str(pVal))
 print("P-Value in % = " + str(pVal*100)+' %')
 
